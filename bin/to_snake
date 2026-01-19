@@ -1,0 +1,22 @@
+#!/bin/sh
+
+main() {
+  MARKER="([A-Z])"
+  OTHER="([^A-Z])"
+
+  # Convert CamelCase to camel_case
+  sed -r "s/$OTHER$MARKER/\1_\2/g" |
+  # Convert CCase to c_case
+  sed -r "s/$MARKER$MARKER$OTHER/\1_\2\3/g" |
+  tr '[:upper:]' '[:lower:]'
+}
+
+if [ "$#" -eq 0 ]; then
+  main
+  exit
+fi
+
+main <<EOF
+$1
+EOF
+

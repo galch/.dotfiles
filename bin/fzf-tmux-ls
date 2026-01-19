@@ -1,0 +1,11 @@
+#!/bin/sh
+
+target=$(
+	tmux list-sessions -F '#{session_name}' |
+	fzf --reverse --header="Select TMUX session"
+)
+if [ -z "$target" ]; then
+	exit 0
+fi
+
+tmux attach -t "$target"

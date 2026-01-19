@@ -1,0 +1,18 @@
+#!/usr/bin/sudo sh
+#
+# Reinicia la computaodra, estableciendo windows por defecto en grub (unica vez)
+
+GRUB_CFG_PATH="/boot/grub2/grub.cfg"
+
+[ -r $GRUB_CFG_PATH ] || {
+  echo "$GRUB_CFG_PATH is not readable"
+  exit 1
+}
+
+MENU_ENTRY=$(grep -i "^menuentry 'windows" $GRUB_CFG_PATH | head -n 1 | cut -d \' -f 2)
+[ -n "$MENU_ENTRY" ] || {
+  echo "could not find windows grub menu entry"
+}
+
+grub2-reboot "$MENU_ENTRY"
+reboot

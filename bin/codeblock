@@ -1,0 +1,6 @@
+#!/bin/sh
+
+content=$(cat)
+printf '```%s\n' "$1"
+echo "$content"
+printf '```\n'

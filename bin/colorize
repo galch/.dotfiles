@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Colorize stdin matching regex with color code
+
+pattern=$1
+code=$2
+
+# predefined colors
+red="31"
+green="32"
+yellow="33"
+blue="34"
+reset="0"
+
+# swap predefined with code
+case "$code" in
+    "red") code=$red;;
+    "green") code=$green;;
+    "yellow") code=$yellow;;
+    "blue") code=$blue;;
+    "") code=$red
+esac
+
+esc=""
+
+color="${esc}[${code}m"
+off="${esc}[${reset}m"
+
+sed -uE "s/$pattern/$color&$off/"

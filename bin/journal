@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Opens the specified jorunal note, or a daily note if no arguments are provided.
+
+PWD="$HOME/vaults/journal.md"
+mkdir -p "$PWD"
+cd "$PWD" || exit
+
+TARGET=$1
+
+if [ "$TARGET" = "" ]
+then
+   DATE=$(date "+%y-%m-%d")
+   TARGET="daily/$DATE.md"
+else
+   TARGET="$TARGET.md"
+fi
+
+hx "$TARGET"

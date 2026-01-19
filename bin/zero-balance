@@ -1,0 +1,18 @@
+#!/bin/sh
+
+ether_to_wei() {
+	bc -e "($1 * 1e18)/1"
+}
+
+BALANCE=$(ether_to_wei "0.000039495448306472")
+BASE_FEE=7
+TIP_FEE=1000000000
+GAS=21000
+
+FEE=$(bc -e "($BASE_FEE + $TIP_FEE) * $GAS")
+TRANSFER=$(bc -e "$BALANCE - $FEE")
+
+echo "Current Balance:    $BALANCE"
+echo "Transaction Fee:    $FEE"
+echo "Amount to Transfer: $TRANSFER"
+
