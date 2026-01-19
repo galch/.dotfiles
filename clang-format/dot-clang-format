@@ -1,0 +1,35 @@
+# Default to LLVM where unspecified
+BasedOnStyle: LLVM
+
+# Disable line length limit
+ColumnLimit: 0
+
+# Brace rules
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterEnum: true
+    AfterStruct: true
+    AfterClass: true
+    AfterFunction: true
+    AfterNamespace: false
+    BeforeCatch: true
+    BeforeElse: true
+
+# Four space indents
+IndentWidth: 4
+
+# Pointer/reference indicators on the typen, not the var
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# Left-align public/protected/private modifiers
+AccessModifierOffset: -4
+
+# Don't right-justify newlines
+AlignEscapedNewlines: DontAlign
+
+# Don't collapse short functions to a single line, unless they're defined inside of a class
+AllowShortFunctionsOnASingleLine: Inline
+
+# Abnormally high trailing comment use here, don't try and match them all.
+AlignTrailingComments: false
