@@ -1,0 +1,4 @@
+[manager]
+prepend_keymap = [
+	{ on = ["g", "e"], run = 'arrow bot', desc = "Move cursor to the bottom" },
+]
