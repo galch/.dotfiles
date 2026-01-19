@@ -1,0 +1,113 @@
+[editor.statusline]
+left = [
+  "mode",
+  "spinner",
+  "version-control",
+  "spacer",
+  "separator",
+  "file-name",
+  "read-only-indicator",
+  "file-modification-indicator",
+
+]
+center = []
+right = [
+  "diagnostics",
+  "workspace-diagnostics",
+  "position",
+  "total-line-numbers",
+  "position-percentage",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+  "register",
+  "selections",
+]
+separator = "│"
+
+# [keys.normal]
+# C-g = ":sh sh -lc 'cd \"$(dirname \"%{buffer_name}\")\" && git diff --name-only origin/master...HEAD | tree --fromfile'"
+
+[keys.normal.space]
+e = { w = ":write", c = ":bc", x = ":bco", l = ":toggle lsp.display-inlay-hints" }
+q = ":quit"
+
+[keys.normal."+"]
+f = ":format"
+w = ":toggle whitespace.render all"
+W = ":set whitespace.render none"
+s = ":toggle soft-wrap.enable"
+
+# [keys.normal.space.f]
+# f = "file_picker_in_current_directory"
+# F = "file_picker"
+# b = "file_picker_in_current_buffer_directory"
+# "." = ":toggle-option file-picker.git-ignore"
+# g = "global_search"
+# e = "file_explorer"
+# r = ":reload-all"
+# x = ":reset-diff-change"
+# w = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+# d = [":vsplit-new", ":lang diff", ":insert-output git diff"]
+
+# Print the current line's git blame information to the statusline.
+# C-c = ":noop %sh{ dir=$(dirname \"%{buffer_name}\"); cd \"$dir\" && git blame -L %{cursor_line},%{cursor_line} -- \"$(basename \"%{buffer_name}\")\" | awk '{print $1}' | xclip -selection clipboard; }"
+[keys.normal]
+# "*" = ["move_prev_word_start", "move_next_word_end", "search_selection", "global_search"]
+C-b = ":echo %sh{ dir=$(dirname \"%{buffer_name}\"); cd \"$dir\" && git blame -L %{cursor_line},%{cursor_line} -- \"$(basename \"%{buffer_name}\")\"; }"
+C-g = [
+    ":sh echo \"%{file_path_absolute}\" > ~/.cache/helix/file_path_absolute",
+    ":write-all",
+    ":new",
+    ":insert-output lazygit -p \"%sh{git -C ''%sh{dirname %sh{cat ~/.cache/helix/file_path_absolute}}'' rev-parse --show-toplevel}\"",
+    ":buffer-close!",
+    ":set mouse false",
+    ":set mouse true",
+    ":redraw",
+    ":reload-all"
+]
+C-k = [
+    ":sh echo \"%{file_path_absolute}\" > ~/.cache/helix/file_path_absolute",
+    ":sh tmux popup -E -d '#{pane_current_path}' -w 80%% -h 80%% lazygit -p \"%sh{git -C ''%sh{dirname %{file_path_absolute}}'' rev-parse --show-toplevel}\""
+]
+C-y = [
+  ':sh rm -f /tmp/unique-file',
+  ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/unique-file',
+  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/unique-file}',
+  ':redraw',
+]
+tab = ":buffer-next"
+S-tab = ":buffer-previous"
+
+
+[editor]
+# line-number = "relative"
+mouse = true
+# rulers = [120]
+true-color = true
+completion-replace = true
+trim-trailing-whitespace = true
+end-of-line-diagnostics = "hint"
+color-modes = true
+rainbow-brackets = true
+bufferline ="always"
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[editor.file-picker]
+hidden = false
+
+# [editor.indent-guides]
+# render = true
+# character = "╎"
+# skip-levels = 0
+
+[editor.soft-wrap]
+enable = false
+
+[editor.auto-save]
+focus-lost  = true
+after-delay.enable = true
+after-delay.timeout = 300000

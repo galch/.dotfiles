@@ -1,0 +1,16 @@
+[language-server.pylsp]
+command = "pylsp"
+
+[language-server.pylsp.config.pylsp.plugins.jedi]
+extra_paths = [
+  "/home/mujin/workspaces/mujin/jhbuildappcontroller/docker/install/test.mcx/lib/python3.9/site-packages",
+  "/home/mujin/workspaces/mujin/jhbuildappcontroller/docker/install/test.mcx/lib/python2.7/site-packages"
+]
+
+# [[language]]
+# name = "python"
+# language-servers = ["pylsp", "ruff"]
+
+[[language]]
+name = "bash"
+indent = { tab-width = 2, unit = "\t" }
