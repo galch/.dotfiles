@@ -90,7 +90,7 @@ completion-replace = true
 trim-trailing-whitespace = true
 end-of-line-diagnostics = "hint"
 color-modes = true
-rainbow-brackets = true
+# rainbow-brackets = true
 bufferline ="always"
 
 [editor.inline-diagnostics]
