@@ -53,7 +53,7 @@ s = ":toggle soft-wrap.enable"
 # Print the current line's git blame information to the statusline.
 # C-c = ":noop %sh{ dir=$(dirname \"%{buffer_name}\"); cd \"$dir\" && git blame -L %{cursor_line},%{cursor_line} -- \"$(basename \"%{buffer_name}\")\" | awk '{print $1}' | xclip -selection clipboard; }"
 [keys.normal]
-# "*" = ["move_prev_word_start", "move_next_word_end", "search_selection", "global_search"]
+"*" = ["move_prev_word_start", "move_next_word_end", "search_selection", "global_search"]
 C-b = ":echo %sh{ dir=$(dirname \"%{buffer_name}\"); cd \"$dir\" && git blame -L %{cursor_line},%{cursor_line} -- \"$(basename \"%{buffer_name}\")\"; }"
 C-g = [
     ":sh echo \"%{file_path_absolute}\" > ~/.cache/helix/file_path_absolute",
@@ -79,6 +79,7 @@ C-y = [
 ]
 tab = ":buffer-next"
 S-tab = ":buffer-previous"
+S-x = ["select_line_above"]
 
 
 [editor]
