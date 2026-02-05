@@ -1,0 +1,40 @@
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD
+    visual = !gitk
+    who = !git-who
+	g = grep -n
+	gi = grep -ni
+[core]
+	editor = hx
+[pull]
+	rebase = false
+[user]
+	name = steve.han
+	email = steve.han@mujin.co.jp
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+    required = true
+[icdiff]
+    options = --highlight --line-numbers
+[diff]
+	tool = icdiff
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+    tool = vscode
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+[difftool]
+	prompt = false
+[difftool "icdiff"]
+	cmd = icdiff --line-numbers --highlight --no-bold --report-identical-files --color-map=separator:white,description:cyan $LOCAL $REMOTE
+[credential "https://git.mujin.co.jp"]
+	helper = 
+	helper = !/usr/bin/glab auth git-credential
