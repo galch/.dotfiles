@@ -1,0 +1,926 @@
+#r#g################################# START DEFAULTS ###################################
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000000
+HISTFILESIZE=200000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[38;5;14m\]\u\[$(tput sgr0)\]@\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) \$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(__git_ps1) \$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    #alias grep='grep --color=auto'
+    #alias fgrep='fgrep --color=auto'
+    #alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+#alias ll='ls -l'
+#alias la='ls -A'
+#alias l='ls -CF'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+      . /usr/share/bash-completion/bash_completion
+  fi
+  if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+# ----------------------------------- END DEFAULTS -----------------------------------
+
+
+
+
+
+# Disable workspace for now. Uncomment it if you want to use workspace.
+# # ################################### START WORKSPACES ###################################
+# export WORKSPACES_ROOT=${HOME}
+# # export WORKSPACES_ROOT="/home/mujin"
+# set -o physical
+
+# mujin_workspace_make () {
+#     CURRENT_WORKING_DIR=$(pwd)
+#     MUJIN_WORKSPACE_ID=$1
+
+#     mkdir -p ${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}/checkoutroot
+#     cd ${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}
+#     git clone git@git.mujin.co.jp:jhbuild/jhbuildcommon.git
+#     git clone git@git.mujin.co.jp:jhbuild/jhbuildappcontroller.git
+#     mujin_workspace_set ${MUJIN_WORKSPACE_ID}
+#     mujin_jhbuildcommon_updatejhbuildcommon.bash
+#     cd ${MUJINJH_APPCONTROLLER_HOME}
+#     mujin_jhbuildcommon_initjhbuild.bash
+#     jhbuild sysdeps --install
+#     mujin_workspace_set ${MUJIN_WORKSPACE_ID}
+#     cd ${CURRENT_WORKING_DIR}
+# }
+
+# mujin_workspace_set() {
+#     MUJIN_WORKSPACE_ID=$1
+#     MUJIN_WORKSPACE_ROOT=${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}
+
+#     # Clear previous MUJIN env variables
+#     unset CMAKE_PREFIX_PATH
+#     unset PYTHONPATH
+#     unset QML_IMPORT_PATH
+#     unset OPENRAVE_PLUGINS
+#     unset HDF5_PLUGIN_PATH
+#     unset GENICAM_GENTL64_PATH
+#     unset QML2_IMPORT_PATH
+#     unset OPENRAVE_DATA
+#     unset PKG_CONFIG_PATH
+
+#     unset MUJIN_SHUGO_SHARE_DIR
+
+#     unset MUJIN_TESTAPPCONTROLLER_SHARE_DIR
+#     unset MUJIN_RESOURCES_SHARE_DIR
+#     unset MUJIN_ROBOTS_SHARE_DIR
+#     unset QT_PLUGIN_PATH
+#     unset MUJIN_APPCONTROLLER_HOME
+#     unset MUJIN_APPFRPIECEPICKINGWITHQPS_SHARE_DIR
+#     unset MUJIN_TESTREGISTRATION_SHARE_DIR
+
+#     MUJIN_TESTAPPCONTROLLER_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appcontroller/testappcontroller
+#     MUJIN_RESOURCES_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/resources
+#     MUJIN_ROBOTS_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/robots
+#     QT_PLUGIN_PATH=${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/install/lib/plugins:
+#     MUJIN_APPCONTROLLER_HOME=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appcontroller
+#     MUJIN_APPFRPIECEPICKINGWITHQPS_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appfrpiecepickingwithqps
+#     MUJIN_TESTREGISTRATION_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/registration/testregistration
+
+#     for VAR in `printenv | grep ^MUJIN | sed -e 's/=.*$//'`; do
+#         unset -f ${VAR}
+#     done
+#     export MUJIN_WORKSPACE_JHBUILDAPP_NAME="jhbuildappcontroller"
+#     echo -e "Configuring Mujin environment: \033[01;32m${MUJIN_WORKSPACE_ID}\033[00m"
+#     # Update .jhbuildrc
+#     if [ "$(diff -q ${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/.jhbuildrc ${HOME}/.jhbuildrc)" != "" ]; then
+#         echo "Updating ~/.jhbuildrc"
+#         cp ${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/.jhbuildrc ${HOME}/
+#     fi
+#     export LD_LIBRARY_PATH="/usr/local/lib"
+#     unset PATH
+#     export PATH=$ORG_PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin
+#     export PATH=/usr/lib/ccache:$PATH
+#     YELLOW='\033[1;33m'
+#     GREEN='\033[0;32m'
+#     RED='\033[0;31m'
+#     NC='\033[0m' # No Color
+#     display_text() {
+#         # $1 color
+#         # $2 text
+#         echo -e "$1$2${NC}"
+#     }
+#     log_info() {
+#         display_text $NC "$1"
+#     }
+#     log_debug() {
+#         display_text $GREEN "$1"
+#     }
+#     log_warn() {
+#         display_text $YELLOW "$1"
+#     }
+#     log_error() {
+#         display_text $RED "$1"
+#     }
+#     if [[ $PATH != *"${MUJIN_WORKSPACE_ROOT}/jhbuildcommon/bin"* ]]; then
+#         export PATH="${MUJIN_WORKSPACE_ROOT}/jhbuildcommon/bin:$PATH"
+#     fi
+#     export MUJINJH_COMMON=${MUJIN_WORKSPACE_ROOT}/jhbuildcommon
+#     if [ -f "${MUJINJH_COMMON}/jhbuild/contrib/jhbuild_completion.bash" ]; then
+#         source "${MUJINJH_COMMON}/jhbuild/contrib/jhbuild_completion.bash"
+#     fi
+
+#     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) \[\033[01;32m\](workspace:${MUJIN_WORKSPACE_ID}) \[\033[00m\]$ '
+#     export MUJIN_JHBUILD_CHECKOUT_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot
+#     export MUJINJH_APPCONTROLLER_HOME=${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}
+#     export D=${MUJIN_WORKSPACE_ROOT}/checkoutroot/detectors/python/mujindetection/
+#     # alias unitest="MUJIN_RESOURCES_DIR=/testdata mujin_testcontrollercommon_runpytest.py ${MUJIN_WORKSPACE_ROOT}/checkoutroot/detectors/testdetectors/python/mujintestdetection -m askulbox0*fast"
+#     # alias pytst="pytest -p no:cacheprovider -p no:mujintestcommon -v --log-level ERROR -m detector_ci_marker ${MUJIN_WORKSPACE_ROOT}/checkoutroot/testdetectors/python/mujintestdetection/test_detector.py --resource "
+#     # alias jb="cd ~/mujin/jhbuildappcontroller/; git checkout master; git pull origin master; mujin_jhbuildcommon_updatejhbuildcommon.bash; mujin_jhbuildcommon_initjhbuild.bash; jhbuild sysdeps --install; jhbuild"
+#     export MUJIN_JHBUILD_DOWNLOADS_DIR=${MUJIN_WORKSPACE_ROOT}/downloads
+#     source ${MUJINJH_APPCONTROLLER_HOME}/setuptestdev.bash
+
+#     return 0
+# }
+
+# mujin_workspace_checkout() {
+#     CURRENT_WORKING_DIR=$(pwd)
+#     MUJIN_WORKSPACE_ID=$1
+#     MUJIN_WORKSPACE_ROOT=${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}
+#     rm ${HOME}/mujin || true
+#     ln -s ${MUJIN_WORKSPACE_ROOT} ${HOME}/mujin
+#     cd ${CURRENT_WORKING_DIR}
+# }
+
+# if [ -f ${WORKSPACES_ROOT} ]; then
+#     alias mujin_workspace_list='ls --color=never ${WORKSPACES_ROOT}/workspaces'
+#     CURRENT_WORKSPACES=`mujin_workspace_list`
+#     complete -W "${CURRENT_WORKSPACES}" mujin_workspace_set
+#     complete -W "${CURRENT_WORKSPACES}" mujin_workspace_checkout
+# fi
+# # ----------------------------------- END WORKSPACES -----------------------------------
+
+# # Check out mujin workspace by default (if exists)
+# if [ -d "${WORKSPACES_ROOT}/workspaces/mujin" ]; then
+#     mujin_workspace_set mujin
+#     mujin_workspace_checkout mujin
+# fi
+
+# ################################### START PERSONAL ###################################
+# alias vdd="mujin_testdetectors_rundetector.py --show --datadetectiondir ."
+# alias vddl="mujin_testdetectors_rundetector.py --forcelocaldatadetection True --datadetectiondir . --reportname hamdiSingleDetTest"
+# alias kk="kill -9 %"
+# alias vnc="vinagre"
+# alias title='f(){ echo -ne "\033]0;$@\007"; unset -f f; }; f'
+# alias gitdiff='f(){ git diff `git merge-base origin/master $@` $@; unset -f f; }; f'
+# alias git='f(){ sg net "/usr/bin/git $@"; unset -f f; }; f'
+#-----------------------------------  END PERSONAL -----------------------------------
+
+################################### WINE SETTINGS ###################################
+export WINEINSTALL=/opt/wine-staging
+export WINEPREFIX=/home/mujin/winesc2
+export PATH=$WINEINSTALL/bin:$PATH
+export LD_LIBRARY_PATH=/usr/lib/i386-linux-gnu/nvidia/current:$WINEINSTALL/lib:$LD_LIBRARY_PATH
+export WINESERVER=$WINEINSTALL/bin/wineserver
+export WINELOADER=$WINEINSTALL/bin/wine
+export WINEDLLPATH=$WINEINSTALL/lib/wine/fakedlls
+export WINEVERPATH=$WINEINSTALL
+export WINEDEBUG="fixme-all"
+#--------------------------------- END WINE SETTINGS ----------------------------------------
+
+
+#if [ -f ~/mujin/jhbuildappcontroller/setupdev.bash ]; then
+#    source ~/mujin/jhbuildappcontroller/setupdev.bash
+#fi
+# if you want to process checkoutroot/dev_module/test_submodule/bin as well, enable below instead (with disabling setupdev.bash)
+# source ~/mujin/jhbuildappcontroller/setuptestdev.bash
+
+#if [ -f ~/mujin/jhbuildappcontroller/setupdev.bash ]; then
+#    source ~/mujin/jhbuildcommon/setup.bash
+#fi
+
+if [ -f /private/mujin_conf.bash ]; then
+    source /private/mujin_conf.bash
+fi
+
+# Python PIP executable path
+#if [ -f ~/.local/bin ]; then
+#    export PATH=$PATH:~/.local/bin
+#fi
+
+# Snap executable path
+if [ -f /snap/bin/ ]; then
+    export PATH=$PATH:/snap/bin/
+fi
+
+# ################################ INFRA OPTIONS ######################################
+
+# 2022/06/09 - Docker compose is no longer a single binary and is now its own addon. Adding a alias to ensure execution is the same.
+alias docker-compose="docker compose"
+
+# alias ls="exa --long --header --git -all  --color=always --icons"   # Note: For icon support ensure you have nerdfonts enabled on your terminal (mujin default)
+# alias ffind=fdfind
+# alias cat=batcat  # Note: This does add line numbers making simple copy and paste more trickier.
+# alias df=duf
+# alias top=bpytop
+# alias htop=bpytop
+# alias diff=icdiff
+
+# This is CCZE, a fast log colorizer written in C, intended to be a drop-in replacement for colorize
+alias cc="ccze --mode=ansi"
+alias ps="ps auxwf | ccze --mode=ansi"
+
+# Prevent proxy use for git.mujin.co.jp to prevent interfence with git-lfs (which uses https only)
+export NO_PROXY=git.mujin.co.jp
+
+# ------------------------------- END INFRA OPTIONS ------------------------------------
+
+# mussh
+export PATH="${HOME}/mujin/ssh/bin:${PATH}"
+[ ! -e /.dockerenv ] && mussh start
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin:/usr/local/go/bin"
+alias ll="ls -alhart"
+PROMPT_DIRTRIM=2
+alias pip3="python3 -m pip"
+
+# ################################### START WORKSPACES ###################################
+export WORKSPACES_ROOT=${HOME}
+# export WORKSPACES_ROOT="/home/mujin"
+mujin_workspace_make () {
+    CURRENT_WORKING_DIR=$(pwd)
+    MUJIN_WORKSPACE_ID=$1
+    mkdir -p ${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}/checkoutroot
+    cd ${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}
+    git clone git@git.mujin.co.jp:jhbuild/jhbuildcommon.git
+    git clone git@git.mujin.co.jp:jhbuild/jhbuildappcontroller.git
+    mujin_workspace_set ${MUJIN_WORKSPACE_ID}
+    mujin_jhbuildcommon_updatejhbuildcommon.bash
+    cd ${MUJINJH_APPCONTROLLER_HOME}
+    mujin_jhbuildcommon_initjhbuild.bash
+    jhbuild sysdeps --install
+    mujin_workspace_set ${MUJIN_WORKSPACE_ID}
+    cd ${CURRENT_WORKING_DIR}
+}
+mujin_workspace_set() {
+    MUJIN_WORKSPACE_ID=$1
+    MUJIN_WORKSPACE_ROOT=${WORKSPACES_ROOT}/workspaces/${MUJIN_WORKSPACE_ID}
+    # Clear previous MUJIN env variables
+    unset CMAKE_PREFIX_PATH
+    unset PYTHONPATH
+    unset QML_IMPORT_PATH
+    unset OPENRAVE_PLUGINS
+    unset HDF5_PLUGIN_PATH
+    unset GENICAM_GENTL64_PATH
+    unset QML2_IMPORT_PATH
+    unset OPENRAVE_DATA
+    unset PKG_CONFIG_PATH
+    unset MUJIN_SHUGO_SHARE_DIR
+    unset MUJIN_TESTAPPCONTROLLER_SHARE_DIR
+    unset MUJIN_RESOURCES_SHARE_DIR
+    unset MUJIN_ROBOTS_SHARE_DIR
+    unset QT_PLUGIN_PATH
+    unset MUJIN_APPCONTROLLER_HOME
+    unset MUJIN_APPFRPIECEPICKINGWITHQPS_SHARE_DIR
+    unset MUJIN_TESTREGISTRATION_SHARE_DIR
+    MUJIN_TESTAPPCONTROLLER_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appcontroller/testappcontroller
+    MUJIN_RESOURCES_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/resources
+    MUJIN_ROBOTS_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/robots
+    QT_PLUGIN_PATH=${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/install/lib/plugins:
+    MUJIN_APPCONTROLLER_HOME=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appcontroller
+    MUJIN_APPFRPIECEPICKINGWITHQPS_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/appfrpiecepickingwithqps
+    MUJIN_TESTREGISTRATION_SHARE_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot/registration/testregistration
+    for VAR in `printenv | grep ^MUJIN | sed -e 's/=.*$//'`; do
+        unset -f ${VAR}
+    done
+    export MUJIN_WORKSPACE_JHBUILDAPP_NAME="jhbuildappcontroller"
+    echo -e "Configuring Mujin environment: \033[01;32m${MUJIN_WORKSPACE_ID}\033[00m"
+    # Update .jhbuildrc
+    if [ "$(diff -q ${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/.jhbuildrc ${HOME}/.jhbuildrc)" != "" ]; then
+        echo "Updating ~/.jhbuildrc"
+        cp ${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}/.jhbuildrc ${HOME}/
+    fi
+    export LD_LIBRARY_PATH="/usr/local/lib"
+    unset PATH
+    export PATH=$ORG_PATH:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin
+    export PATH=/usr/lib/ccache:$PATH
+    YELLOW='\033[1;33m'
+    GREEN='\033[0;32m'
+    RED='\033[0;31m'
+    NC='\033[0m' # No Color
+    display_text() {
+        # $1 color
+        # $2 text
+        echo -e "$1$2${NC}"
+    }
+    log_info() {
+        display_text $NC "$1"
+    }
+    log_debug() {
+        display_text $GREEN "$1"
+    }
+    log_warn() {
+        display_text $YELLOW "$1"
+    }
+    log_error() {
+        display_text $RED "$1"
+    }
+    if [[ $PATH != *"${MUJIN_WORKSPACE_ROOT}/jhbuildcommon/bin"* ]]; then
+        export PATH="${MUJIN_WORKSPACE_ROOT}/jhbuildcommon/bin:$PATH"
+    fi
+    export MUJINJH_COMMON=${MUJIN_WORKSPACE_ROOT}/jhbuildcommon
+    if [ -f "${MUJINJH_COMMON}/jhbuild/contrib/jhbuild_completion.bash" ]; then
+        source "${MUJINJH_COMMON}/jhbuild/contrib/jhbuild_completion.bash"
+    fi
+	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(__git_ps1) \[\033[01;32m\](workspace:${MUJIN_WORKSPACE_ID}) \[\033[00m\]$ '
+	export MUJIN_JHBUILD_CHECKOUT_DIR=${MUJIN_WORKSPACE_ROOT}/checkoutroot
+    export MUJINJH_APPCONTROLLER_HOME=${MUJIN_WORKSPACE_ROOT}/${MUJIN_WORKSPACE_JHBUILDAPP_NAME}
+    export D=${MUJIN_WORKSPACE_ROOT}/checkoutroot/detectors/python/mujindetection/
+    # alias unitest="MUJIN_RESOURCES_DIR=/testdata mujin_testcontrollercommon_runpytest.py ${MUJIN_WORKSPACE_ROOT}/checkoutroot/detectors/testdetectors/python/mujintestdetection -m askulbox0*fast"
+    # alias pytst="pytest -p no:cacheprovider -p no:mujintestcommon -v --log-level ERROR -m detector_ci_marker ${MUJIN_WORKSPACE_ROOT}/checkoutroot/testdetectors/python/mujintestdetection/test_detector.py --resource "
+    # alias jb="cd ~/mujin/jhbuildappcontroller/; git checkout master; git pull origin master; mujin_jhbuildcommon_updatejhbuildcommon.bash; mujin_jhbuildcommon_initjhbuild.bash; jhbuild sysdeps --install; jhbuild"
+    export MUJIN_JHBUILD_DOWNLOADS_DIR=${MUJIN_WORKSPACE_ROOT}/downloads
+    source ${MUJINJH_APPCONTROLLER_HOME}/setuptestdev.bash
+    return 0
+}
+mujin_workspace_checkout() {
+    current_working_dir=$(pwd)
+    mujin_workspace_id=$1
+    mujin_workspace_root=${workspaces_root}/workspaces/${mujin_workspace_id}
+    #rm ${home}/mujin || true
+    #ln -s ${MUJIN_WORKSPACE_ROOT} ${HOME}/mujin
+    #cd ${CURRENT_WORKING_DIR}
+}
+if [ -f ${WORKSPACES_ROOT} ]; then
+    alias mujin_workspace_list='ls --color=never ${WORKSPACES_ROOT}/workspaces'
+    CURRENT_WORKSPACES=`mujin_workspace_list`
+    complete -W "${CURRENT_WORKSPACES}" mujin_workspace_set
+    complete -W "${CURRENT_WORKSPACES}" mujin_workspace_checkout
+fi
+# ################################### END WORKSPACES ###################################
+# Check out mujin workspace by default (if exists)
+if [ -d "${WORKSPACES_ROOT}/workspaces/mujin" ]; then
+    mujin_workspace_set mujin
+    mujin_workspace_checkout mujin
+fi
+export PATH=$PATH:~/.local/bin
+
+. "$HOME/.cargo/env"
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$(go env GOPATH)/bin
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+alias fzfz='fzf --style full --preview '\''fzf-preview.sh {}'\'' --bind '\''focus:transform-header:file --brief {}'\'''
+export PATH=$PATH:/sbin:/snap/bin:/usr/bin/docker
+export HELIX_RUNTIME=~/src/helix/runtime
+alias cddk='cd ~/workspaces/mujin/jhbuildappcontroller/docker/'
+alias cdc='cd ~/workspaces/mujin/checkoutroot/'
+alias cdct='cd ~/workspaces/mujin/checkoutroot/testappcontroller/test'
+alias gitscan="git for-each-ref --format='%(*refname)' | xargs git grep"
+alias rgrg="rg --colors 'match:bg:yellow' --colors 'match:fg:black' --colors 'match:style:nobold' --colors 'path:fg:green' --colors 'path:style:bold' --colors 'line:fg:yellow' --colors 'line:style:bold' "
+alias clr="clear; neofetch"
+export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# set options for less
+export LESS='--quit-if-one-screen --ignore-case --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
+# or the short version
+# export LESS='-F -i -M -R -W -x4 -X -z-4'
+
+bind '"\e[6~": menu-complete'
+bind '"\e[5~": menu-complete-backward'
+# Ensure /usr/bin is checked first for executables like 'docker'
+export PATH="/usr/bin:$PATH"
+shopt -s histappend
+# export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+# export HISTIGNOREDUP=1lexport HISTIGNORE="history*:exit:ls:cd"
+export PYTHONPATH="${PYTHONPATH}:/home/mujin/workspaces/mujin/jhbuildappcontroller/docker/install/test.mcx/lib/python3.9/site-packages:/home/mujin/workspaces/mujin/jhbuildappcontroller/docker/install/test.mcx/lib/python2.7/site-packages"
+
+alias claude-mem='/home/mujin/.bun/bin/bun "/home/mujin/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+
+# opencode
+export PATH=/home/mujin/.opencode/bin:$PATH
+
+function gitlabMRSummary ()
+{
+    local NO_AI=0;
+    if [[ "$1" == "--no-ai" ]]; then
+        NO_AI=1;
+        shift;
+    elif [[ "$1" == "--ai" ]]; then
+        shift;
+    fi
+
+    local AUTHOR_USERNAME="$1";
+    local CREATED_AFTER="$2";
+    local CREATED_BEFORE="$3";
+    local GITLAB_HOST="git.mujin.co.jp";
+    if [[ $# -ne 3 ]]; then
+        cat <<EOF
+Usage:
+  gitlabMRSummary [--no-ai] <username> <created_after> <created_before>
+
+Arguments:
+  username        GitLab username (e.g. eisoku.kuroiwa)
+  created_after   ISO8601 datetime (e.g. 2025-07-01)
+  created_before  ISO8601 datetime (e.g. 2025-12-31)
+
+AI Summary:
+  - Default: uses ollama if GITLAB_MR_SUMMARY_AI_PROVIDER is not set.
+  - Configure ollama with OLLAMA_MODEL (default: gpt-oss:120b-cloud).
+  - Override with GITLAB_MR_SUMMARY_AI_PROVIDER=openai|ollama|none.
+
+Issues/Tickets:
+  - Included in AI summary by default (created by or assigned to the user).
+  - Disable with GITLAB_MR_SUMMARY_INCLUDE_ISSUES=0.
+  - Support project path: GITLAB_MR_SUMMARY_SUPPORT_PROJECT (default: mujin/support).
+Reviews:
+  - Include review activity by default.
+  - Disable with GITLAB_MR_SUMMARY_INCLUDE_REVIEWS=0.
+
+Prerequisites:
+  1. Install glab (GitLab CLI):
+    sudo apt install glab
+
+  2. Authenticate with your GitLab instance:
+    glab auth login
+    - Make sure to select your *self-hosted GitLab* hostname "${GITLAB_HOST}"
+    - API access is required
+EOF
+
+        return 1;
+    fi
+    EMOJI_MERGED="✅";
+    EMOJI_OPENED="🚧";
+    EMOJI_CLOSED="❌";
+    EMOJI_CRITICAL="🔥";
+    EMOJI_HIGH="⚠️";
+    REVIEW_COST_HIGH="💸";
+    REVIEW_COST_LOW="🪙";
+    HIGH_COST_REVIEWER="xxx";
+    SECONDS=0;
+    LAST_TS=0;
+    function ts ()
+    {
+        local now=$SECONDS;
+        local delta=$((now - LAST_TS));
+        printf "[%4ds | +%2ds] %s\n" "$now" "$delta" "$1";
+        LAST_TS=$now
+    };
+    ts "Fetch merge requests";
+    MRS_JSON=$(glab api --hostname "$GITLAB_HOST" --paginate "/merge_requests?scope=all&author_username=$AUTHOR_USERNAME&created_after=$CREATED_AFTER&created_before=$CREATED_BEFORE");
+    if ! echo "$MRS_JSON" | jq -s -e 'flatten | length > 0' >/dev/null 2>&1; then
+        echo "No merge requests found.";
+        return 0;
+    fi
+    ts "Collect project IDs";
+    PROJECT_IDS=$(echo "$MRS_JSON" | jq -s 'flatten | map(.project_id) | unique | .[]');
+    ts "Fetch default branches per project";
+    DEFAULT_BRANCH_JSON="{";
+    for pid in $PROJECT_IDS;
+    do
+        branch=$(glab api --hostname "$GITLAB_HOST" "/projects/$pid" | jq -r '.default_branch');
+        DEFAULT_BRANCH_JSON+="\"$pid\":\"$branch\",";
+    done;
+    DEFAULT_BRANCH_JSON="${DEFAULT_BRANCH_JSON%,}}";
+    ts "Filter / group / print per repository";
+    echo "$MRS_JSON" | jq -s -r --argjson default_branches "$DEFAULT_BRANCH_JSON" --arg EMOJI_MERGED "$EMOJI_MERGED" --arg EMOJI_OPENED "$EMOJI_OPENED" --arg EMOJI_CLOSED "$EMOJI_CLOSED" --arg EMOJI_CRITICAL "$EMOJI_CRITICAL" --arg EMOJI_HIGH "$EMOJI_HIGH" --arg REVIEW_COST_HIGH "$REVIEW_COST_HIGH" --arg REVIEW_COST_LOW "$REVIEW_COST_LOW" --arg HIGH_COST_REVIEWER "$HIGH_COST_REVIEWER" '
+    def emoji(state):
+      if state == "merged" then $EMOJI_MERGED
+      elif state == "opened" then $EMOJI_OPENED
+      elif state == "closed" then $EMOJI_CLOSED
+      else "❓" end;
+
+    def severity:
+      (.labels // [])
+      | if any(. == "bug-severity::critical") then $EMOJI_CRITICAL
+        elif any(. == "bug-severity::high") then $EMOJI_HIGH
+        else " " end;
+
+    def reviewed_cost:
+      if (.reviewers // []) | any(.username == $HIGH_COST_REVIEWER) then $REVIEW_COST_HIGH
+      else $REVIEW_COST_LOW end;
+
+    flatten
+    | map(select(.target_branch == ($default_branches[.project_id | tostring])))
+    | group_by(.project_id)
+    | .[]
+    | . as $mrs
+
+    | ($mrs[0].web_url
+        | split("/-/merge_requests/")[0]
+        | sub("^https?://[^/]+/"; "")
+      ) as $repo
+
+    | ($mrs | map(select(.state=="merged")) | length) as $merged
+    | ($mrs | map(select(.state=="opened")) | length) as $opened
+    | ($mrs | map(select(.state=="closed")) | length) as $closed
+    | ($mrs | map(select((.labels//[]) | any(.=="bug-severity::critical"))) | length) as $critical
+    | ($mrs | map(select((.labels//[]) | any(.=="bug-severity::high"))) | length) as $high
+
+    | "Repository: \($repo): \($mrs | length) (" +
+        "\($EMOJI_MERGED) \($merged) / " +
+        "\($EMOJI_OPENED) \($opened) / " +
+        "\($EMOJI_CLOSED) \($closed) + " +
+        "\($EMOJI_CRITICAL) \($critical) / " +
+        "\($EMOJI_HIGH) \($high)" +
+      ")",
+      (
+        ($mrs | sort_by(.created_at))[]
+        | (.created_at | split("T")[0]) as $date
+        | "  - \($date) | \(emoji(.state)) \(severity) \(reviewed_cost) | \(.title) | \(.web_url)"
+      ),
+      ""
+  ';
+    echo "$MRS_JSON" | jq -s -r --arg EMOJI_MERGED "$EMOJI_MERGED" --arg EMOJI_OPENED "$EMOJI_OPENED" --arg EMOJI_CLOSED "$EMOJI_CLOSED" --arg EMOJI_CRITICAL "$EMOJI_CRITICAL" --arg EMOJI_HIGH "$EMOJI_HIGH" --arg REVIEW_COST_HIGH "$REVIEW_COST_HIGH" --arg REVIEW_COST_LOW "$REVIEW_COST_LOW" --arg HIGH_COST_REVIEWER "$HIGH_COST_REVIEWER" '
+    flatten as $all
+    | ($all | map(select(.state=="merged")) | length) as $merged
+    | ($all | map(select(.state=="opened")) | length) as $opened
+    | ($all | map(select(.state=="closed")) | length) as $closed
+    | ($all | map(select((.labels//[]) | any(.=="bug-severity::critical"))) | length) as $critical
+    | ($all | map(select((.labels//[]) | any(.=="bug-severity::high"))) | length) as $high
+    | ($all | map(select((.reviewers//[]) | any(.username==$HIGH_COST_REVIEWER))) | length) as $reviewed_by_user
+
+    | "ALL REPOSITORIES",
+      "Total MRs: \($all | length) (" +
+        "\($EMOJI_MERGED) \($merged) / " +
+        "\($EMOJI_OPENED) \($opened) / " +
+        "\($EMOJI_CLOSED) \($closed) + " +
+        "\($EMOJI_CRITICAL) \($critical) / " +
+        "\($EMOJI_HIGH) \($high) + " +
+        "\($REVIEW_COST_HIGH) \($reviewed_by_user)" +
+      ")",
+      ""
+  '
+
+    local INCLUDE_ISSUES="${GITLAB_MR_SUMMARY_INCLUDE_ISSUES:-1}";
+    local ISSUES_JSON="";
+    local SUPPORT_ISSUES_JSON="";
+    local SUPPORT_PROJECT_PATH="${GITLAB_MR_SUMMARY_SUPPORT_PROJECT:-mujin/support}";
+    local SUPPORT_PROJECT_PATH_ENCODED="${SUPPORT_PROJECT_PATH//\//%2F}";
+    if [[ "$INCLUDE_ISSUES" != "0" ]]; then
+        ts "Fetch issues";
+        local ISSUES_AUTHOR_JSON="";
+        local ISSUES_ASSIGNEE_JSON="";
+        if ! ISSUES_AUTHOR_JSON=$(glab api --hostname "$GITLAB_HOST" --paginate "/issues?scope=all&author_username=$AUTHOR_USERNAME&created_after=$CREATED_AFTER&created_before=$CREATED_BEFORE"); then
+            echo "Failed to fetch issues created by user.";
+            ISSUES_AUTHOR_JSON="";
+        fi
+        if ! ISSUES_ASSIGNEE_JSON=$(glab api --hostname "$GITLAB_HOST" --paginate "/issues?scope=all&assignee_username=$AUTHOR_USERNAME&created_after=$CREATED_AFTER&created_before=$CREATED_BEFORE"); then
+            echo "Failed to fetch issues assigned to user.";
+            ISSUES_ASSIGNEE_JSON="";
+        fi
+        if ! SUPPORT_ISSUES_JSON=$(glab api --hostname "$GITLAB_HOST" --paginate "/projects/${SUPPORT_PROJECT_PATH_ENCODED}/issues?scope=all&assignee_username=$AUTHOR_USERNAME&created_after=$CREATED_AFTER&created_before=$CREATED_BEFORE"); then
+            echo "Failed to fetch support issues assigned to user.";
+            SUPPORT_ISSUES_JSON="";
+        fi
+        ISSUES_JSON=$(printf "%s\n%s\n%s\n" "$ISSUES_AUTHOR_JSON" "$ISSUES_ASSIGNEE_JSON" "$SUPPORT_ISSUES_JSON" | jq -s 'flatten | unique_by(.id)');
+        if echo "$SUPPORT_ISSUES_JSON" | jq -s -e 'flatten | length > 0' >/dev/null 2>&1; then
+            local SUPPORT_ISSUE_IDS;
+            SUPPORT_ISSUE_IDS=$(echo "$SUPPORT_ISSUES_JSON" | jq -s 'flatten | map(.id) | unique');
+            ISSUES_JSON=$(echo "$ISSUES_JSON" | jq -s --argjson support_ids "$SUPPORT_ISSUE_IDS" '
+              flatten
+              | map(select(.id as $id | ($support_ids | index($id)) | not))
+            ');
+        fi
+        if echo "$ISSUES_JSON" | jq -s -e 'flatten | length > 0' >/dev/null 2>&1; then
+            ts "Print issues";
+            echo "$ISSUES_JSON" | jq -s -r --arg EMOJI_OPENED "$EMOJI_OPENED" --arg EMOJI_DONE "$EMOJI_MERGED" '
+              def emoji(state):
+                if state == "opened" then $EMOJI_OPENED
+                elif state == "closed" then $EMOJI_DONE
+                else "❓" end;
+
+              flatten
+              | sort_by(.created_at)
+              | "Issues (created or assigned):",
+                (
+                  .[]
+                  | (.created_at | split("T")[0]) as $date
+                  | "  - \($date) | \(emoji(.state)) | \(.title) | \(.web_url)"
+                ),
+                ""
+            ';
+        else
+            echo "Issues: 0";
+            echo "";
+        fi
+
+        if echo "$SUPPORT_ISSUES_JSON" | jq -s -e 'flatten | length > 0' >/dev/null 2>&1; then
+            ts "Print support issues";
+            echo "$SUPPORT_ISSUES_JSON" | jq -s -r --arg EMOJI_OPENED "$EMOJI_OPENED" --arg EMOJI_DONE "$EMOJI_MERGED" --arg SUPPORT_PROJECT_PATH "$SUPPORT_PROJECT_PATH" '
+              def emoji(state):
+                if state == "closed" then $EMOJI_DONE
+                elif state == "opened" then $EMOJI_OPENED
+                else "❓" end;
+
+              flatten
+              | sort_by(.created_at)
+              | "Support Issues (assigned) in \($SUPPORT_PROJECT_PATH):",
+                (
+                  .[]
+                  | (.created_at | split("T")[0]) as $date
+                  | "  - \($date) | \(emoji(.state)) | \(.title) | \(.web_url)"
+                ),
+                ""
+            ';
+        else
+            echo "Support Issues (assigned): 0";
+            echo "";
+        fi
+    fi
+
+    local INCLUDE_REVIEWS="${GITLAB_MR_SUMMARY_INCLUDE_REVIEWS:-1}";
+    local REVIEWS_JSON="";
+    if [[ "$INCLUDE_REVIEWS" != "0" ]]; then
+        ts "Fetch review MRs";
+        if ! REVIEWS_JSON=$(glab api --hostname "$GITLAB_HOST" --paginate "/merge_requests?scope=all&reviewer_username=$AUTHOR_USERNAME&created_after=$CREATED_AFTER&created_before=$CREATED_BEFORE"); then
+            echo "Failed to fetch review MRs.";
+            REVIEWS_JSON="";
+        fi
+        if echo "$REVIEWS_JSON" | jq -s -e 'flatten | length > 0' >/dev/null 2>&1; then
+            ts "Print review MRs";
+            echo "$REVIEWS_JSON" | jq -s -r '
+              def repo:
+                (.web_url
+                  | split("/-/merge_requests/")[0]
+                  | sub("^https?://[^/]+/"; "")
+                );
+              flatten
+              | sort_by(.created_at)
+              | "Reviewed MRs:",
+                (
+                  .[]
+                  | (.created_at | split("T")[0]) as $date
+                  | "  - \($date) | \(.state) | \(repo) | \(.title) | \(.web_url)"
+                ),
+                ""
+            ';
+        else
+            echo "Reviewed MRs: 0";
+            echo "";
+        fi
+    fi
+
+    if [[ $NO_AI -eq 0 ]]; then
+        echo "";
+        echo "AI Summary (self-evaluation)";
+        _gitlabMRSummary_ai "$AUTHOR_USERNAME" "$CREATED_AFTER" "$CREATED_BEFORE" "$MRS_JSON" "$DEFAULT_BRANCH_JSON" "$ISSUES_JSON" "$SUPPORT_ISSUES_JSON" "$SUPPORT_PROJECT_PATH" "$REVIEWS_JSON";
+    fi
+}
+
+function _gitlabMRSummary_ai ()
+{
+    local AUTHOR_USERNAME="$1";
+    local CREATED_AFTER="$2";
+    local CREATED_BEFORE="$3";
+    local MRS_JSON="$4";
+    local DEFAULT_BRANCH_JSON="$5";
+    local ISSUES_JSON="$6";
+    local SUPPORT_ISSUES_JSON="$7";
+    local SUPPORT_PROJECT_PATH="$8";
+    local REVIEWS_JSON="$9";
+    local MR_INPUT;
+    MR_INPUT=$(echo "$MRS_JSON" | jq -s -r --argjson default_branches "$DEFAULT_BRANCH_JSON" '
+      flatten
+      | map(select(.target_branch == ($default_branches[.project_id | tostring])))
+      | map(select(.state=="merged"))
+      | sort_by(.created_at)
+      | map(
+          (.web_url | split("/-/merge_requests/")[0]
+            | sub("^https?://[^/]+/"; "")
+          ) + ": " + .title
+        )
+      | .[]
+    ');
+    local ISSUE_INPUT="";
+    local SUPPORT_ISSUE_INPUT="";
+    if [[ -n "$ISSUES_JSON" ]]; then
+        ISSUE_INPUT=$(echo "$ISSUES_JSON" | jq -s -r '
+          flatten
+          | sort_by(.created_at)
+          | map(
+              "[" + (if .state == "closed" then "DONE" else "OPEN" end) + "] " +
+              (.web_url | split("/-/issues/")[0]
+                | sub("^https?://[^/]+/"; "")
+              ) + ": " + .title
+            )
+          | .[]
+        ');
+    fi
+    if [[ -n "$SUPPORT_ISSUES_JSON" ]]; then
+        SUPPORT_ISSUE_INPUT=$(echo "$SUPPORT_ISSUES_JSON" | jq -s -r '
+          flatten
+          | sort_by(.created_at)
+          | map(
+              "[" + (if .state == "closed" then "DONE" else "OPEN" end) + "] " +
+              (.web_url | split("/-/issues/")[0]
+                | sub("^https?://[^/]+/"; "")
+              ) + ": " + .title
+            )
+          | .[]
+        ');
+    fi
+    local REVIEW_INPUT="";
+    if [[ -n "$REVIEWS_JSON" ]]; then
+        REVIEW_INPUT=$(echo "$REVIEWS_JSON" | jq -s -r '
+          flatten
+          | sort_by(.created_at)
+          | map(
+              (.web_url | split("/-/merge_requests/")[0]
+                | sub("^https?://[^/]+/"; "")
+              ) + ": " + .title
+            )
+          | .[]
+        ');
+    fi
+
+    if [[ -z "$MR_INPUT" && -z "$ISSUE_INPUT" && -z "$SUPPORT_ISSUE_INPUT" && -z "$REVIEW_INPUT" ]]; then
+        echo "No merged MRs or issues found; skip AI summary.";
+        return 0;
+    fi
+
+    local PROMPT;
+    PROMPT=$(cat <<'EOF'
+You are helping a software engineer write a self-evaluation for the company form.
+Use the inputs (merged MRs and issues/tickets) to draft responses for the form sections below.
+Write in clear, professional English, ready to paste into the evaluation sheet.
+
+Required form sections:
+1) Performance Evaluation (Self-Evaluation): 6-10 bullets summarizing achievements against goals, focusing on impact, reliability, quality, and customer value. Fold support ticket outcomes into relevant bullets.
+2) Competency Evaluation (Company Values): 4-6 bullets mapping work to Mujin values. Only include values supported by evidence. Use the value names. Fold support ticket outcomes into relevant bullets.
+3) New Goals (Next term goals): 4-6 clear and measurable goals. Use concrete outcomes, scope, or deliverables. If metrics are unknown, use verifiable deliverables (e.g., "ship X feature", "reduce Y class of incidents", "add N tests", "document Z process").
+4) Narrative Summary: 3-5 sentences summarizing overall contribution and growth focus. Fold support ticket outcomes into the narrative if relevant.
+
+Rules:
+- Do not mention internal repository or project names unless necessary.
+- Prefer user impact, reliability, quality, and operational stability language.
+- Use present tense, concise phrasing, and avoid fluff.
+- Do not invent metrics. If counts are visible, you may summarize them.
+EOF
+);
+
+    local CONTENT;
+    CONTENT="Time window: ${CREATED_AFTER} to ${CREATED_BEFORE}
+Author: ${AUTHOR_USERNAME}
+Merged MRs:
+${MR_INPUT}
+
+Issues/Tickets:
+${ISSUE_INPUT}
+
+Support Tickets (assigned in ${SUPPORT_PROJECT_PATH}; CLOSED counts as DONE):
+${SUPPORT_ISSUE_INPUT}
+
+Reviewed MRs:
+${REVIEW_INPUT}
+";
+
+    local PROVIDER="${GITLAB_MR_SUMMARY_AI_PROVIDER:-ollama}";
+    if [[ "$PROVIDER" == "none" ]]; then
+        echo "AI summary disabled (GITLAB_MR_SUMMARY_AI_PROVIDER=none).";
+        return 0;
+    fi
+
+    if [[ "$PROVIDER" == "openai" ]]; then
+        if ! command -v curl >/dev/null 2>&1; then
+            echo "curl not found; cannot call OpenAI.";
+            return 1;
+        fi
+        local MODEL="${OPENAI_MODEL:-gpt-4o-mini}";
+        local PAYLOAD;
+        PAYLOAD=$(jq -n --arg model "$MODEL" --arg content "${PROMPT}\n${CONTENT}" \
+          '{model:$model,messages:[{role:"user",content:$content}],temperature:0.2}');
+        local RESP;
+        RESP=$(curl -sS https://api.openai.com/v1/chat/completions \
+          -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+          -H "Content-Type: application/json" \
+          -d "$PAYLOAD");
+        local OUT;
+        OUT=$(echo "$RESP" | jq -r '.choices[0].message.content // empty');
+        if [[ -z "$OUT" ]]; then
+            echo "OpenAI response empty. Raw response:";
+            echo "$RESP";
+            return 1;
+        fi
+        echo "$OUT";
+        return 0;
+    fi
+
+    if [[ "$PROVIDER" == "ollama" ]]; then
+        if ! command -v ollama >/dev/null 2>&1; then
+            echo "ollama not found.";
+            return 1;
+        fi
+        local MODEL="${OLLAMA_MODEL:-gpt-oss:120b-cloud}";
+        printf "%s\n\n%s" "$PROMPT" "$CONTENT" | ollama run "$MODEL";
+        return 0;
+    fi
+
+    echo "No AI provider available. Set GITLAB_MR_SUMMARY_AI_PROVIDER=openai|ollama|none.";
+}
+
+sshp() {
+    local host="$1"
+    local cmd="${@:2}"
+    read -p "Are you sure you want to run '$cmd' on $host? (y/N) " confirm
+    if [[ $confirm == [yY] ]]; then
+        ssh -t "$host" "$cmd"
+    fi
+}
+
