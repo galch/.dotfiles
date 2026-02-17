@@ -1,0 +1,67 @@
+# Global Codex approval policy.
+# Format: prefix_rule(<command-prefix>, <policy>)
+# Policies: allow, prompt, forbid
+
+# Low-risk read/inspect commands
+prefix_rule(["ls"], allow)
+prefix_rule(["pwd"], allow)
+prefix_rule(["cat"], allow)
+prefix_rule(["sed"], allow)
+prefix_rule(["awk"], allow)
+prefix_rule(["rg"], allow)
+prefix_rule(["find"], allow)
+prefix_rule(["head"], allow)
+prefix_rule(["tail"], allow)
+prefix_rule(["wc"], allow)
+prefix_rule(["stat"], allow)
+prefix_rule(["which"], allow)
+
+# Common local build/test/format commands
+prefix_rule(["cmake"], allow)
+prefix_rule(["make"], allow)
+prefix_rule(["ctest"], allow)
+prefix_rule(["ninja"], allow)
+prefix_rule(["pytest"], allow)
+prefix_rule(["ruff"], allow)
+prefix_rule(["cargo", "test"], allow)
+prefix_rule(["cargo", "clippy"], allow)
+prefix_rule(["cargo", "fmt"], allow)
+prefix_rule(["cargo", "bench"], allow)
+
+# Safe git read-only commands
+prefix_rule(["git", "status"], allow)
+prefix_rule(["git", "diff"], allow)
+prefix_rule(["git", "log"], allow)
+prefix_rule(["git", "show"], allow)
+prefix_rule(["git", "blame"], allow)
+prefix_rule(["git", "branch"], allow)
+
+# History-changing / publish actions need explicit confirmation
+prefix_rule(["git", "commit"], prompt)
+prefix_rule(["git", "push"], prompt)
+prefix_rule(["git", "tag"], prompt)
+prefix_rule(["git", "merge"], prompt)
+prefix_rule(["git", "cherry-pick"], prompt)
+
+# Package/network/system-changing commands need explicit confirmation
+prefix_rule(["npm", "install"], prompt)
+prefix_rule(["npm", "update"], prompt)
+prefix_rule(["pnpm", "install"], prompt)
+prefix_rule(["yarn", "install"], prompt)
+prefix_rule(["pip", "install"], prompt)
+prefix_rule(["pip3", "install"], prompt)
+prefix_rule(["poetry", "add"], prompt)
+prefix_rule(["uv", "pip"], prompt)
+prefix_rule(["cargo", "add"], prompt)
+prefix_rule(["cargo", "install"], prompt)
+prefix_rule(["curl"], prompt)
+prefix_rule(["wget"], prompt)
+prefix_rule(["apt"], prompt)
+prefix_rule(["apt-get"], prompt)
+prefix_rule(["sudo"], prompt)
+
+# Potentially destructive commands are blocked by default
+prefix_rule(["git", "rebase"], forbid)
+prefix_rule(["git", "reset", "--hard"], forbid)
+prefix_rule(["git", "clean"], forbid)
+prefix_rule(["rm", "-rf"], forbid)
