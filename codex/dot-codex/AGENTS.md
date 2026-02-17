@@ -80,3 +80,10 @@ Repository-local `AGENTS.md` or explicit user/system instructions override this 
 
 - Ask before commands that install dependencies, change system state, access networked resources, or publish artifacts.
 - Never use destructive commands outside the requested scope.
+
+## Runtime Safety
+
+- Do not use `BOOST_ASSERT` (or assert-style macros) to control important production logic.
+- Any condition that can happen at runtime in production must be handled explicitly with deterministic behavior (log + error/return/throw).
+- Assertions may be used only for debug-only invariant diagnostics, not for control flow or required validation.
+
