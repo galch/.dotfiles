@@ -39,6 +39,9 @@ Repository-local `AGENTS.md` or explicit user/system instructions override this 
   - Prefer explicit error handling over silent failures.
   - Add logs with enough context to debug quickly.
   - Do not swallow exceptions/errors without an explicit handling strategy.
+  - **Logging**: use `MUJIN_LOG_DEBUG_FMT()`, `MUJIN_LOG_INFO_FMT()`, `MUJIN_LOG_WARN_FMT()`, `MUJIN_LOG_ERROR_FMT()` with `{}`-style formatting instead of `MUJIN_LOG_*_FORMAT` macros
+    - If there is no variable substitution, use `MUJIN_LOG_DEBUG()`, `MUJIN_LOG_INFO()`, etc.
+    - For user-facing exceptions, wrap with `_()` or `MUJIN_I18N_FMT()` for translation.
 
 ## Language Defaults
 
