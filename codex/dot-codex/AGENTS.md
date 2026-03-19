@@ -1,6 +1,6 @@
 # Global Agent Expectations
 
-This file defines default working expectations for any repository.
+This file defines default working expectations for any workspace.
 Repository-local `AGENTS.md` or explicit user/system instructions override this file.
 
 ## Primary Goals
@@ -21,6 +21,23 @@ Repository-local `AGENTS.md` or explicit user/system instructions override this 
 - In monorepos or multi-module workspaces, split work into small, verifiable steps.
 - Prefer targeted searches (`rg`, scoped paths) over broad scans.
 - Avoid speculative refactors while implementing requested behavior.
+
+## Sub-Agent Delegation Policy
+
+- Delegate bounded, read-heavy, or parallelizable subtasks to sub-agents when this improves token efficiency or turnaround time.
+- Prefer delegation for:
+  - lightweight repository exploration (file discovery, owner/call-site mapping)
+  - independent evidence gathering across modules
+  - parallel checks that do not require shared mutable state
+- Keep critical-path decisions local:
+  - do not delegate tightly-coupled tasks where the immediate next edit depends on nuanced reasoning from current context
+- When delegating, define a strict contract:
+  - explicit scope, expected output format, and clear ownership boundary (files/modules/questions)
+  - avoid duplicate delegation for the same unresolved question
+  - merge and reconcile sub-agent outputs before making final edits
+- Optimize for concise outputs:
+  - request summaries with concrete file paths and line references
+  - avoid long transcripts when a short decision-ready result is sufficient
 
 ## General Coding Standards
 
@@ -58,35 +75,16 @@ Repository-local `AGENTS.md` or explicit user/system instructions override this 
   - Avoid process-global state in library code when possible.
   - Do not mutate input arguments unless the function contract explicitly requires it.
   - Keep library modules import-safe (avoid side effects and startup loops at import time).
-- Rust:
-  - Follow `rustfmt` style and resolve `clippy` warnings where practical.
-  - Keep unit tests close to code; add integration tests where cross-module behavior matters.
-  - Prefer modern module layout (avoid introducing `mod.rs` in new code unless the repo already standardizes on it).
 
-## Validation Workflow
-
-1. Run the smallest relevant test/lint/format target first.
-2. Expand to broader checks only after local changes pass.
-3. Report what was run and what could not be run.
-4. Do not fix unrelated failures unless explicitly requested.
-
-## Commit and Change History
-
-- Follow Conventional Commits: `<type>[optional scope]: <description>`.
-- Use `!` or `BREAKING CHANGE:` for breaking changes.
-- Include motivation/context in the commit body when it helps reviewers.
-- Keep commits focused; avoid mixing unrelated changes.
-- If a repository uses automated changelog/version workflows, follow that workflow instead of manual ad hoc updates.
-- Avoid history-rewriting commands (for example `rebase`, `reset --hard`) unless explicitly requested.
 
 ## Safety
 
 - Ask before commands that install dependencies, change system state, access networked resources, or publish artifacts.
 - Never use destructive commands outside the requested scope.
 
+
 ## Runtime Safety
 
 - Do not use `BOOST_ASSERT` (or assert-style macros) to control important production logic.
 - Any condition that can happen at runtime in production must be handled explicitly with deterministic behavior (log + error/return/throw).
 - Assertions may be used only for debug-only invariant diagnostics, not for control flow or required validation.
-
